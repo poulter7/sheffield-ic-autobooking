@@ -44,12 +44,14 @@ public class Session {
 	private List<NameValuePair> params = null;
 	
 	protected Session(){
+		/*
 		client = new DefaultHttpClient();
 		localContext = new BasicHttpContext();
 		// make the cookies store
 		cookieStore = new BasicCookieStore();
 		// attach the cookie store
 		localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+		*/
 	}
 	
 	/**
@@ -82,11 +84,16 @@ public class Session {
 	 * @param finishTime
 	 * @param date
 	 * @param resource
-	 * @throws URISyntaxException 
 	 * @throws IOException 
+	 * @throws URISyntaxException 
 	 * @throws ClientProtocolException 
 	 */
-	protected void book(String startTime, String finishTime, String date, String resource) throws URISyntaxException, ClientProtocolException, IOException{
+	
+	protected void doJob(Job j) throws ClientProtocolException, URISyntaxException, IOException{
+		book(j.startTime,j.endTime,j.date,j.date);
+	}
+	
+	private void book(String startTime, String finishTime, String date, String resource) throws URISyntaxException, ClientProtocolException, IOException{
 		params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("startTime", startTime));
 		params.add(new BasicNameValuePair("endTime", finishTime));
