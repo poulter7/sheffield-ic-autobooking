@@ -78,7 +78,25 @@ public class JobManager {
 			}
 		}else{
 			System.out.println("Scheduling logon procedure to five minutes before booking");
-			Timer t = new Timer();
+			final Timer t = new Timer();
+			final TimerTask book = new TimerTask() {
+				
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					for(User u: users){
+						for(Job j: u.taskList){
+							try {
+								u.personalSession.doJob(j);
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+			};
+			
 			TimerTask login = new TimerTask() {
 				
 				@Override
@@ -87,6 +105,13 @@ public class JobManager {
 						try {
 							u.personalSession.login(u.name, u.password);
 							int serverTimeOffset= getServerTimeOffset();
+							
+							Calendar canLogInNow = (Calendar) startDate.clone();
+							canLogInNow.add(Calendar.DAY_OF_WEEK, -ADVANCED_BOOKING_DAYS+1);
+							setToMidnight(canLogInNow);
+							// go five minutes before
+							canLogInNow.add(Calendar.SECOND, 1 + serverTimeOffset);
+							t.schedule(book, canLogInNow.getTime());
 							// schedule booking tasks
 							
 						} catch (Exception e) {
