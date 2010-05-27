@@ -32,7 +32,7 @@ public class JobManager {
 	final Calendar startDate =  Calendar.getInstance();
 	final Calendar endDate =  Calendar.getInstance();
 
-	private static final int ADVANCED_BOOKING_DAYS = 3;
+	private static final int ADVANCED_BOOKING_DAYS = 2;
 
 	/**
 	 * Asks the JobManager to book this room out and state how many users you have to play with
@@ -101,45 +101,50 @@ public class JobManager {
 				
 				@Override
 				public void run() {
+					System.out.println("Executing logon");
 					for(User u: users){
 						try {
-							u.personalSession.login(u.name, u.password);
-							int serverTimeOffset= getServerTimeOffset();
 							
-							Calendar canLogInNow = (Calendar) startDate.clone();
-							canLogInNow.add(Calendar.DAY_OF_WEEK, -ADVANCED_BOOKING_DAYS+1);
-							setToMidnight(canLogInNow);
-							// go five minutes before
-							canLogInNow.add(Calendar.SECOND, 1 + serverTimeOffset);
-							t.schedule(book, canLogInNow.getTime());
-							// schedule booking tasks
+							u.personalSession.login(u.name, u.password);
+							
+							
 							
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
+					// schedule booking tasks
+					int serverTimeOffset= getServerTimeOffset();
+					Calendar canBookNow = (Calendar) startDate.clone();
+					canBookNow.add(Calendar.DAY_OF_WEEK, -ADVANCED_BOOKING_DAYS);
+					
+					setToMidnight(canBookNow);
+					// will book one second after
+					canBookNow.add(Calendar.SECOND, 1 - serverTimeOffset);
+					System.out.println("Will make bookings at: " + canBookNow.getTime().toString() + " which is " + serverTimeOffset + " seconds behind the server's time");
+					t.schedule(book, canBookNow.getTime());
 					
 				}
 
 				private int getServerTimeOffset() {
 					// TODO Auto-generated method stub
-					return 0;
+					return 10;
 				}
 			};
 			// make the date 5 minutes before the login time
 			Calendar canLogInNow = (Calendar) startDate.clone();
-			canLogInNow.add(Calendar.DAY_OF_WEEK, -ADVANCED_BOOKING_DAYS+1);
+			canLogInNow.add(Calendar.DAY_OF_WEEK, -ADVANCED_BOOKING_DAYS);
 			setToMidnight(canLogInNow);
 			// go five minutes before
-			canLogInNow.add(Calendar.MINUTE, -5);
+			final int loginPrior = 31;
+			canLogInNow.add(Calendar.MINUTE, -loginPrior);
 			// schedule everyone to be logged in
 			System.out.println("Will log everyone in at: " + canLogInNow.getTime().toString());
 			t.schedule(login, canLogInNow.getTime());
 			
 			
 		}
-		
 		return SUCCESSFUL_SCHEDULE;
 	}
 	

@@ -17,7 +17,7 @@ public class User {
 	
 	protected void addTask(Job j) {
 		this.taskList.add(j);
-		System.out.println("User:" + name + " has new job: " + j.startTime + " - " + j.endTime);
+		System.out.println("User:" + name + " has new job: " + j.startTime + " - " + j.endTime +" on "+j.date);
 	}
 	
 	
