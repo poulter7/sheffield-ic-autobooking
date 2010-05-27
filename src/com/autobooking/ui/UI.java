@@ -13,15 +13,16 @@ import javax.swing.JPanel;
 import org.jdesktop.swingx.JXDatePicker;
 
 public class UI extends JFrame {
+	
+	
 
 	public static void main(String[] args) {
 		new UI();
 	}
 
 	public UI() {
-		Dimension size = new Dimension(300, 150);
+		Dimension size = new Dimension(298, 137);
 		
-		this.setSize(size);
 		this.setMinimumSize(size);
 		
 		this.setTitle("IC auto booking system");
@@ -29,6 +30,7 @@ public class UI extends JFrame {
 		this.getContentPane().add(setupPanel());
 		this.pack();
 		this.setVisible(true);
+		//System.out.println(this.getSize());
 	}
 
 	private String[] timeList() {
@@ -43,12 +45,11 @@ public class UI extends JFrame {
 	private JPanel setupPanel() {
 		JPanel panel = new JPanel();
 		
-		double border = 10;
-		double gap = border/2;
+		double border = 6;
 		
 		double size[][] =
-	        {{border, 0.5, gap, 0.5, border},
-	         {border, TableLayout.FILL, gap, TableLayout.FILL,gap,  TableLayout.FILL, border}};
+	        {{border, 0.5, border, 0.5, border},
+	         {border, 25, border, 25, border, 25, border}};
 
 		panel.setLayout (new TableLayout(size));
 
@@ -63,15 +64,15 @@ public class UI extends JFrame {
 
 		JComboBox startTime = new JComboBox(timeList);
 
-		JComboBox endTime = new JComboBox(timeList);
-		endTime.setSelectedIndex(startTime.getSelectedIndex() + 4);
+		JComboBox endTime = new JComboBox(timeList);	
+		//endTime.setSelectedIndex(startTime.getSelectedIndex() + 4);
 
 		JButton bookButton = new JButton("Book Now!");
-		
-		panel.add(roomList, "1,1,f,c");
-		panel.add(dateField, "3,1,f,c");
-		panel.add(startTime, "1,3,f,c");
-		panel.add(endTime, "3,3,f,c");
+				
+		panel.add(roomList, "1,1");
+		panel.add(dateField, "3,1");
+		panel.add(startTime, "1,3");
+		panel.add(endTime, "3,3");
 		panel.add(bookButton, "1,5,3,5");
 		
 		// return the freshly created panel
