@@ -15,9 +15,6 @@ public class Test {
 		rooms.add(new Room(330, "Cilass 1"));
 		users.add(new User("aca08is", ""));
 		users.add(new User("jon", ""));
-		users.add(new User("jon", ""));
-		users.add(new User("jon", ""));
-		users.add(new User("jon", ""));
 		//rooms.add(new Room("235"));
 		System.out.println("Testing");
 		System.out.println(new Main().performTask(new Job(rooms.get(0), "12:00","24:00","29/05/2010"), users));

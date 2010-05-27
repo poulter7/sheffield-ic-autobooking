@@ -2,6 +2,7 @@ package com.autobooking.ui;
 
 import info.clearthought.layout.TableLayout;
 
+import java.awt.Dimension;
 import java.awt.GridBagLayout;
 
 import javax.swing.JButton;
@@ -18,6 +19,11 @@ public class UI extends JFrame {
 	}
 
 	public UI() {
+		Dimension size = new Dimension(300, 150);
+		
+		this.setSize(size);
+		this.setMinimumSize(size);
+		
 		this.setTitle("IC auto booking system");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.getContentPane().add(setupPanel());
@@ -35,7 +41,7 @@ public class UI extends JFrame {
 	}
 
 	private JPanel setupPanel() {
-		JPanel panel = new JPanel(new GridBagLayout());
+		JPanel panel = new JPanel();
 		
 		double border = 10;
 		double gap = border/2;
