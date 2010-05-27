@@ -113,6 +113,13 @@ public class Session {
 		response.getEntity().consumeContent();
 	}
 	
+	public String queryTime() throws ClientProtocolException, IOException {
+		HttpGet request = new HttpGet("https://mypc.shef.ac.uk/MyPC3/BookingGrid.htm");
+		HttpResponse response = client.execute(request, localContext);
+		response.getEntity().getContent().toString().split("id=\"clockTime\">[^<]+</span>");
+		return null;
+	}
+	
 	/**
 	 * Clears the CookieStore, effectively logging out of the system
 	 */
@@ -120,6 +127,7 @@ public class Session {
 		//TODO release any resources still attached to the session
 		((CookieStore)localContext.getAttribute(ClientContext.COOKIE_STORE)).clear();
 	}
+	
 	
 	/**
 	 * Shows all the session cookies stored so far
