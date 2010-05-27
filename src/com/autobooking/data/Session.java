@@ -68,7 +68,7 @@ public class Session {
 		params.add(new BasicNameValuePair("page", "validateLogin"));
 		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params, "UTF-8");
 		// setup the post
-		HttpPost httppost = new HttpPost(Main.loginPageURL);
+		HttpPost httppost = new HttpPost(JobManager.loginPageURL);
 		httppost.setEntity(entity);
 		// execute the post
 		HttpResponse response = client.execute(httppost, localContext);
