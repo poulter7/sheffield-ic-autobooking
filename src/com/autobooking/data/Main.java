@@ -69,6 +69,8 @@ public class Main {
 		
 		for(int i = 1; i<blocks; i++){
 			// Work out which user to use, ie for 3 blocks and 2 users user 0, user 1, user 0 or 3 users user 0 user 1 user 2. Think can be done via use of mod
+			// 4 blocks 2 users 0101
+			// 4 blocks 3 users 0120
 		}
 		
 			
