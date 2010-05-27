@@ -7,13 +7,8 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-<<<<<<< HEAD
-=======
-import javax.swing.SwingConstants;
-import javax.swing.UIManager;
 
 import org.jdesktop.swingx.JXDatePicker;
->>>>>>> 335b3917220f0df73852a0ed3ad5618fc5f1bf99
 
 public class UI extends JFrame {
 
