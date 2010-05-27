@@ -26,10 +26,9 @@ public class UI extends JFrame {
 
 	private String[] timeList() {
 		String[] list = new String[25];
-		for (int i = 0; i < 24; i++) {
+		for (int i = 0; i < 25; i++) {
 			list[i] = i + ":00";
 		}
-		list[24] = "23.59";
 
 		return list;
 	}

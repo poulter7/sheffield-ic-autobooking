@@ -20,6 +20,7 @@ public class Main {
 	public static int SUCCESSFUL_SCHEDULE = 1;
 	public static int START_TIME_ALREADY_GONE = 2;
 	public static int START_TIME_AFTER_END_TIME = 3;
+	public static int NEED_MIN_OF_TWO_USERS = 4;
 	private Date startTime = null;
 	private Date endTime = null;
 	private Date now = null;
@@ -48,6 +49,30 @@ public class Main {
 		}
 		// devise the ordering of booking tasks
 		
+		Calendar startDate =  Calendar.getInstance();
+		Calendar endDate =  Calendar.getInstance();
+		
+		startDate.setTime(startTime);
+		endDate.setTime(endTime);
+		
+		long hoursBetween = hoursBetween(startDate, endDate);
+		
+		System.out.println("Job Length: " + hoursBetween);
+		
+		// Going need 2 people.
+		if( hoursBetween > 4 && users.size() < 2 ) {
+			return NEED_MIN_OF_TWO_USERS;
+		}
+
+		int blocks = (int) Math.ceil(hoursBetween/4.0);
+		System.out.println(blocks);
+		
+		for(int i = 1; i<blocks; i++){
+			// Work out which user to use, ie for 3 blocks and 2 users user 0, user 1, user 0 or 3 users user 0 user 1 user 2. Think can be done via use of mod
+		}
+		
+			
+		
 		// if the booking could be made now, go!
 		// execute the booking tasks
 		
@@ -57,12 +82,23 @@ public class Main {
 		
 		return SUCCESSFUL_SCHEDULE;
 	}
+	
+	public long hoursBetween(Calendar startDate, Calendar endDate) {  
+		Calendar date = (Calendar) startDate.clone();  
+		long hoursBetween = 0;  
+		while (date.before(endDate)) {  
+			date.add(Calendar.HOUR_OF_DAY, 1);  
+			hoursBetween++;  
+		}  
+		return hoursBetween;  
+	}  
 
 	/**
 	 * Set all of the times the JobHandler needs to worry about, now, start time, end time.
 	 * @param job
 	 */
 	private void extractTimes(Job job) {
+		System.out.println("Extracting Times");
 		try {
 			// setup date formatter
 			DateFormat d = new SimpleDateFormat();
