@@ -1,8 +1,9 @@
 package com.autobooking.ui;
 
+import info.clearthought.layout.TableLayout;
+
 import java.awt.GridBagLayout;
 
-import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -35,11 +36,16 @@ public class UI extends JFrame {
 
 	private JPanel setupPanel() {
 		JPanel panel = new JPanel(new GridBagLayout());
-		GroupLayout layout = new GroupLayout(panel);
-		panel.setLayout(layout);
+		
+		double border = 10;
+		double gap = border/2;
+		
+		double size[][] =
+	        {{border, 0.5, gap, 0.5, border},
+	         {border, TableLayout.FILL, gap, TableLayout.FILL,gap,  TableLayout.FILL, border}};
 
-		layout.setAutoCreateGaps(true);
-		layout.setAutoCreateContainerGaps(true);
+		panel.setLayout (new TableLayout(size));
+
 
 		String[] timeList = timeList();
 
@@ -55,36 +61,13 @@ public class UI extends JFrame {
 		endTime.setSelectedIndex(startTime.getSelectedIndex() + 4);
 
 		JButton bookButton = new JButton("Book Now!");
-
 		
-		//layout.linkSize(SwingConstants.HORIZONTAL, roomList, dateField, startTime, endTime);
+		panel.add(roomList, "1,1,f,c");
+		panel.add(dateField, "3,1,f,c");
+		panel.add(startTime, "1,3,f,c");
+		panel.add(endTime, "3,3,f,c");
+		panel.add(bookButton, "1,5,3,5");
 		
-		layout.setHorizontalGroup(
-			layout.createSequentialGroup()
-				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-					.addComponent(roomList)
-					.addComponent(startTime)
-				)
-				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-					.addComponent(dateField)
-					.addComponent(endTime)
-				)
-		);
-
-		layout.setVerticalGroup(
-			layout.createSequentialGroup()
-				.addGroup( layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-					.addComponent(roomList)
-					.addComponent(dateField)
-				)
-				.addGroup( layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-					.addComponent(startTime)
-					.addComponent(endTime)
-				)
-			
-		);
-
-
 		// return the freshly created panel
 		return panel;
 	}
