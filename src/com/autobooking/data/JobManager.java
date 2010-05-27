@@ -48,7 +48,6 @@ public class JobManager {
 			return START_TIME_AFTER_END_TIME;
 		}
 		// devise the ordering of booking tasks
-		
 		Calendar startDate =  Calendar.getInstance();
 		Calendar endDate =  Calendar.getInstance();
 		
@@ -56,26 +55,41 @@ public class JobManager {
 		endDate.setTime(endTime);
 		
 		long hoursBetween = hoursBetween(startDate, endDate);
-		
 		System.out.println("Job Length: " + hoursBetween);
 		
-		// Going need 2 people.
+		// Don't have the two users you need
 		if( hoursBetween > 4 && users.size() < 2 ) {
 			return NEED_MIN_OF_TWO_USERS;
 		}
-
-		int blocks = (int) Math.ceil(hoursBetween/4.0);
-		System.out.println(blocks);
-		
-		blocks = 6;
-		
-		for(int i = 0; i<blocks; i++){
-			int user = (i >= users.size()) ? i - users.size() : i; // I can't do maths
-			System.out.println(i + " User: " + user);
-			// Work out which user to use, ie for 3 blocks and 2 users user 0, user 1, user 0 or 3 users user 0 user 1 user 2. Think can be done via use of mod
-			// 4 blocks 2 users 0101
-			// 4 blocks 3 users 0120
+		// if you only have one job, add it
+		if(hoursBetween <= 4){
+			users.get(0).addTask(new Job(job.room, job.startTime, job.endTime, job.date));
+		}else{  
+			int blocks = (int) Math.ceil(hoursBetween/4.0);
+			System.out.println(blocks);
+			
+			/*
+			 * figure who will book which rooms
+			 * will only ever REALLY need to book using two users, anything more is over complicated
+			 * the people are bothered solely about obtaining the room, not who books it
+			 * if that was an issue they would book separately not use this system. For now at least
+			 */
+			// calculate start hour
+			Calendar c = Calendar.getInstance();
+			c.setTime(startTime);
+			int startHour = c.get(Calendar.HOUR_OF_DAY);
+			// do the full blocks if only one this won't get called
+			int i;
+			for(i = 0; i< blocks -1; i++){
+				// add the chosen user a task
+				int blockHour = startHour + i*4;
+				users.get(i%2).addTask(new Job(job.room, blockHour+":00", (blockHour+4)+":00", job.date));
+			}
+			// this section will start at a four hour block and finish at some other time  
+			users.get(i%2).addTask(new Job(job.room, (startHour + (i*4)) +":00", job.endTime, job.date));
 		}
+		
+		// assign user one task of booking last (possibly the only) booking
 		
 			
 		
@@ -90,6 +104,7 @@ public class JobManager {
 	}
 	
 	public long hoursBetween(Calendar startDate, Calendar endDate) {  
+		// TODO could be int this can be at maximum 24
 		Calendar date = (Calendar) startDate.clone();  
 		long hoursBetween = 0;  
 		while (date.before(endDate)) {  

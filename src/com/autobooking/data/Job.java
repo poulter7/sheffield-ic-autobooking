@@ -6,6 +6,7 @@ public class Job {
 	String startTime;
 	String endTime;
 	String date;
+	
 	public Job(Room room, String startTime, String endTime,
 			String date) {
 		this.room = room;

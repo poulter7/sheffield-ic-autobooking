@@ -44,12 +44,12 @@ public class Session {
 	private List<NameValuePair> params = null;
 	
 	protected Session(){
-		client = new DefaultHttpClient();
+		/*client = new DefaultHttpClient();
 		localContext = new BasicHttpContext();
 		// make the cookies store
 		cookieStore = new BasicCookieStore();
 		// attach the cookie store
-		localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+		localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);*/
 	}
 	
 	/**

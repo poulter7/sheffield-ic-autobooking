@@ -17,6 +17,6 @@ public class Test {
 		users.add(new User("jon", ""));
 		//rooms.add(new Room("235"));
 		System.out.println("Testing");
-		System.out.println(new JobManager().performTask(new Job(rooms.get(0), "12:00","24:00","29/05/2010"), users));
+		System.out.println(new JobManager().performTask(new Job(rooms.get(0), "11:00","23:59","29/05/2010"), users));
 	}
 }
