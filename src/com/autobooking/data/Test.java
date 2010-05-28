@@ -15,13 +15,13 @@ public class Test {
 		new Test();
 	}
 	public Test() {
-		rooms.add(new Room(330, "Cilass 1"));
-		users.add(new User("aca08is", ""));
-		users.add(new User("jon", ""));
-		//rooms.add(new Room("235"));
+		//rooms.add(new Room(330, "Cilass 1"));
+		users.add(new User("pha07jrp", ""));
+		users.add(new User("pcb07bs", ""));
+		rooms.add(new Room(331, "CILass1"));
 		System.out.println("Testing");
 		try {
-			System.out.println(new JobManager().performTask(new Job(rooms.get(0), "23:00","23:59","30/05/2010"), users));
+			System.out.println(new JobManager().performTask(new Job(rooms.get(0), "12:00","23:59","31/05/2010"), users));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

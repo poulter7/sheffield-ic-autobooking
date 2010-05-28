@@ -88,14 +88,14 @@ public class Session {
 	 */
 	
 	protected void doJob(Job j) throws ClientProtocolException, URISyntaxException, IOException{
-		book(j.startTime,j.endTime,j.date,j.date);
+		book(j.startTime,j.endTime,j.date,j.room.getRoomID());
 	}
 	
-	private void book(String startTime, String finishTime, String date, String resource) throws URISyntaxException, ClientProtocolException, IOException{
+	private void book(String startTime, String finishTime, String date, int resource) throws URISyntaxException, ClientProtocolException, IOException{
 		params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("startTime", startTime));
 		params.add(new BasicNameValuePair("endTime", finishTime));
-		params.add(new BasicNameValuePair("resourceId", resource));
+		params.add(new BasicNameValuePair("resourceId", resource+""));
 		params.add(new BasicNameValuePair("date", date));
 		params.add(new BasicNameValuePair("page", "booking"));
 		params.add(new BasicNameValuePair("command", "create"));
@@ -111,10 +111,17 @@ public class Session {
 		response.getEntity().consumeContent();
 	}
 	
-	public String queryTime() throws ClientProtocolException, IOException {
+	public static String queryTime() throws ClientProtocolException, IOException {
+		HttpClient client = new DefaultHttpClient();
+		HttpContext localContext = new BasicHttpContext();
+		// make the cookies store
+		CookieStore cookieStore = new BasicCookieStore();
+		// attach the cookie store
+		localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
 		HttpGet request = new HttpGet("https://mypc.shef.ac.uk/MyPC3/BookingGrid.htm");
 		HttpResponse response = client.execute(request, localContext);
-		response.getEntity().getContent().toString().split("id=\"clockTime\">[^<]+</span>");
+		response.getEntity().writeTo(System.out);
+		
 		return null;
 	}
 	

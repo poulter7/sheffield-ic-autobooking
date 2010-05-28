@@ -104,11 +104,7 @@ public class JobManager {
 					System.out.println("Executing logon");
 					for(User u: users){
 						try {
-							
 							u.personalSession.login(u.name, u.password);
-							
-							
-							
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -122,14 +118,19 @@ public class JobManager {
 					setToMidnight(canBookNow);
 					// will book one second after
 					canBookNow.add(Calendar.SECOND, 1 - serverTimeOffset);
-					System.out.println("Will make bookings at: " + canBookNow.getTime().toString() + " which is " + serverTimeOffset + " seconds behind the server's time");
+					System.out.println("Will make bookings at: " + canBookNow.getTime().toString() + " which is " + serverTimeOffset + " seconds behind the server's time and a second later for grace");
 					t.schedule(book, canBookNow.getTime());
 					
 				}
 
 				private int getServerTimeOffset() {
-					// TODO Auto-generated method stub
-					return 10;
+					try {
+						System.out.println(users.get(0).personalSession.queryTime());
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					return 20;
 				}
 			};
 			// make the date 5 minutes before the login time
@@ -137,7 +138,7 @@ public class JobManager {
 			canLogInNow.add(Calendar.DAY_OF_WEEK, -ADVANCED_BOOKING_DAYS);
 			setToMidnight(canLogInNow);
 			// go five minutes before
-			final int loginPrior = 31;
+			final int loginPrior = 2;
 			canLogInNow.add(Calendar.MINUTE, -loginPrior);
 			// schedule everyone to be logged in
 			System.out.println("Will log everyone in at: " + canLogInNow.getTime().toString());
@@ -156,7 +157,7 @@ public class JobManager {
 	 */
 	private boolean canStartNow(Job job) {
 		Calendar canBookOnCal = Calendar.getInstance();
-		canBookOnCal.add(Calendar.DAY_OF_WEEK, ADVANCED_BOOKING_DAYS);
+		canBookOnCal.add(Calendar.DAY_OF_WEEK, ADVANCED_BOOKING_DAYS+1);
 		return startDate.before(canBookOnCal);
 	}
 	
