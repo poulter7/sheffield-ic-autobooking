@@ -2,7 +2,6 @@ package com.autobooking.data;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,8 +28,8 @@ public class JobManager {
 	public static int START_TIME_ALREADY_GONE = 2;
 	public static int START_TIME_AFTER_END_TIME = 3;
 	public static int NEED_MIN_OF_TWO_USERS = 4;
-	final Calendar startDate =  Calendar.getInstance();
-	final Calendar endDate =  Calendar.getInstance();
+	private final Calendar startDate =  Calendar.getInstance();
+	private final Calendar endDate =  Calendar.getInstance();
 
 	private static final int ADVANCED_BOOKING_DAYS = 2;
 
@@ -56,7 +55,6 @@ public class JobManager {
 			return START_TIME_AFTER_END_TIME;
 		}
 		long hoursBetween = hoursBetween(startDate, endDate);
-		System.out.println("Job Length: " + hoursBetween);
 		
 		// Don't have the two users you need
 		if( hoursBetween > 4 && users.size() < 2 ) {
@@ -67,88 +65,98 @@ public class JobManager {
 		
 		// if you can do it all now, go for it!
 		if(canStartNow(job)){
-			System.out.println("Can book right now!");
-			for(User u: users){
-				u.personalSession.login(u.name, u.password);
-			}
-			for(User u: users){
-				for(Job j: u.taskList){
-					u.personalSession.doJob(j);
-				}
-			}
+			performLoginAndBooking(users);
 		}else{
-			System.out.println("Scheduling logon procedure to five minutes before booking");
-			final Timer t = new Timer();
-			final TimerTask book = new TimerTask() {
-				
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					for(User u: users){
-						for(Job j: u.taskList){
-							try {
-								u.personalSession.doJob(j);
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-					}
-				}
-			};
-			
-			TimerTask login = new TimerTask() {
-				
-				@Override
-				public void run() {
-					System.out.println("Executing logon");
-					for(User u: users){
+			scheduleLoginAndBooking(users);
+		}
+		return SUCCESSFUL_SCHEDULE;
+	}
+	
+	/**
+	 * Perform the logging in and booking all in one, straight away
+	 * 
+	 * @param users
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * @throws URISyntaxException
+	 */
+	private void performLoginAndBooking(List<User> users) throws ClientProtocolException, IOException, URISyntaxException {
+		System.out.println("Can book right now!");
+		for(User u: users){
+			u.personalSession.login(u.name, u.password);
+		}
+		for(User u: users){
+			for(Job j: u.taskList){
+				u.personalSession.doJob(j);
+			}
+		}
+	}
+
+	/**
+	 * Schedule the login to take place at a later date.
+	 * The login will queue the booking requests
+	 * @param users
+	 */
+	private void scheduleLoginAndBooking(final List<User> users) {
+		System.out.println("Scheduling logon procedure to five minutes before booking");
+		final Timer t = new Timer();
+		
+		// define the booking task
+		final TimerTask book = new TimerTask() {
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				for(User u: users){
+					for(Job j: u.taskList){
 						try {
-							u.personalSession.login(u.name, u.password);
+							u.personalSession.doJob(j);
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
-					// schedule booking tasks
-					int serverTimeOffset= getServerTimeOffset();
-					Calendar canBookNow = (Calendar) startDate.clone();
-					canBookNow.add(Calendar.DAY_OF_WEEK, -ADVANCED_BOOKING_DAYS);
-					
-					setToMidnight(canBookNow);
-					// will book one second after
-					canBookNow.add(Calendar.SECOND, 1 - serverTimeOffset);
-					System.out.println("Will make bookings at: " + canBookNow.getTime().toString() + " which is " + serverTimeOffset + " seconds behind the server's time and a second later for grace");
-					t.schedule(book, canBookNow.getTime());
-					
 				}
-
-				private int getServerTimeOffset() {
+			}
+		};
+		
+		// define the login task
+		final TimerTask login = new TimerTask() {
+			
+			@Override
+			public void run() {
+				System.out.println("Executing logon");
+				for(User u: users){
 					try {
-						System.out.println(users.get(0).personalSession.queryTime());
+						u.personalSession.login(u.name, u.password);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					return 20;
 				}
-			};
-			// make the date 5 minutes before the login time
-			Calendar canLogInNow = (Calendar) startDate.clone();
-			canLogInNow.add(Calendar.DAY_OF_WEEK, -ADVANCED_BOOKING_DAYS);
-			setToMidnight(canLogInNow);
-			// go five minutes before
-			final int loginPrior = 2;
-			canLogInNow.add(Calendar.MINUTE, -loginPrior);
-			// schedule everyone to be logged in
-			System.out.println("Will log everyone in at: " + canLogInNow.getTime().toString());
-			t.schedule(login, canLogInNow.getTime());
-			
-			
-		}
-		return SUCCESSFUL_SCHEDULE;
+				// schedule booking tasks
+				int serverTimeOffset= getServerTimeOffset();
+				Calendar canBookNow = (Calendar) startDate.clone();
+				canBookNow.add(Calendar.DAY_OF_WEEK, -ADVANCED_BOOKING_DAYS);
+				setToMidnight(canBookNow);
+				// will book one second after
+				canBookNow.add(Calendar.SECOND, 1 - serverTimeOffset);
+				System.out.println("Will make bookings at: " + canBookNow.getTime().toString() + " which is " + serverTimeOffset + " seconds behind the server's time and a second later for grace");
+				t.schedule(book, canBookNow.getTime());
+			}
+		};
+		// make the date 5 minutes before the login time
+		Calendar canLogInNow = (Calendar) startDate.clone();
+		canLogInNow.add(Calendar.DAY_OF_WEEK, -ADVANCED_BOOKING_DAYS);
+		setToMidnight(canLogInNow);
+		// go a few minutes before
+		int loginPrior = 2;
+		canLogInNow.add(Calendar.MINUTE, -loginPrior);
+		// schedule everyone to be logged in
+		System.out.println("Will log everyone in at: " + canLogInNow.getTime().toString());
+		t.schedule(login, canLogInNow.getTime());
+		
 	}
-	
+
 	/**
 	 * Returns true if the currently requested job can be performed now
 	 * 
@@ -219,6 +227,7 @@ public class JobManager {
 	 */
 	public long hoursBetween(Calendar startDate, Calendar endDate) {  
 		// TODO could be int this can be at maximum 24
+		// TODO use millis between
 		Calendar date = (Calendar) startDate.clone();  
 		long hoursBetween = 0;  
 		while (date.before(endDate)) {  
@@ -255,5 +264,22 @@ public class JobManager {
 		}
 		startDate.setTime(startTime);
 		endDate.setTime(endTime);
+	}
+	
+	/**
+	 * get the number of seconds by which the server is ahead of the client
+	 * @return
+	 */
+	public static int getServerTimeOffset() {
+		int secondsServerIsAhead = 0;
+		try {
+			// server should take longer to return so get the first
+			Calendar serverNow = Session.queryTime();
+			Calendar clientNow = Calendar.getInstance();
+			secondsServerIsAhead = (int) ((serverNow.getTimeInMillis() - clientNow.getTimeInMillis())/1000.0);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return secondsServerIsAhead;
 	}
 }

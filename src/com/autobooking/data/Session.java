@@ -1,8 +1,14 @@
 package com.autobooking.data;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
@@ -111,18 +117,30 @@ public class Session {
 		response.getEntity().consumeContent();
 	}
 	
-	public static String queryTime() throws ClientProtocolException, IOException {
+	/**
+	 * Returns a Calendar object which represents the server time
+	 * Should be accurate and unchanging as lag is introduced through javascript
+	 * 
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * @throws ParseException
+	 */
+	public static Calendar queryTime() throws ClientProtocolException, IOException, ParseException {
+		// TODO tidy this
 		HttpClient client = new DefaultHttpClient();
-		HttpContext localContext = new BasicHttpContext();
-		// make the cookies store
-		CookieStore cookieStore = new BasicCookieStore();
-		// attach the cookie store
-		localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
-		HttpGet request = new HttpGet("https://mypc.shef.ac.uk/MyPC3/BookingGrid.htm");
-		HttpResponse response = client.execute(request, localContext);
-		response.getEntity().writeTo(System.out);
-		
-		return null;
+		HttpGet request = new HttpGet("https://mypc.shef.ac.uk/MyPC3/Front.aspx?page=login");
+		HttpResponse response = client.execute(request);
+		ByteArrayOutputStream b = new ByteArrayOutputStream();
+		response.getEntity().writeTo(b);
+		String serverTimeString = b.toString().split("var nd = new Date")[1]; 
+		String[] elements= serverTimeString.substring(serverTimeString.indexOf('(')+1, serverTimeString.indexOf(')')).split(",");
+		DateFormat d = new SimpleDateFormat();
+		Date serverTime = d.parse(elements[2]+"/"+elements[1]+"/"+elements[0]+" "+elements[3]+":"+elements[4]);
+		Calendar returnDate = Calendar.getInstance();
+		returnDate.setTime(serverTime);
+		returnDate.set(Calendar.SECOND, Integer.parseInt(elements[5]));
+		return returnDate;
 	}
 	
 	/**
