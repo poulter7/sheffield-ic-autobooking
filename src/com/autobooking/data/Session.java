@@ -79,6 +79,11 @@ public class Session {
 		// execute the post
 		HttpResponse response = client.execute(httppost, localContext);
 		response.getEntity().consumeContent();
+		if(printCookies() == 2){
+			System.out.println("\tSuccessful logon");
+		}else{
+			System.out.println("\tLogon failed");
+		}
 	}
 	
 	/**
@@ -155,10 +160,10 @@ public class Session {
 	/**
 	 * Shows all the session cookies stored so far
 	 */
-	protected void printCookies(){
-		System.out.println("Printing Cookie store");
+	protected int printCookies(){
 		for(Cookie c: cookieStore.getCookies()){
 			System.out.println("[" + c.getName() +", " + c.getValue() +"]");
 		}
+		return cookieStore.getCookies().size();
 	}
 }

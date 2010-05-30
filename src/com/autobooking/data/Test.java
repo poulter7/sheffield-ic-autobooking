@@ -25,7 +25,7 @@ public class Test {
 		rooms.add(new Room(330, "CILass1"));
 		System.out.println("Testing");
 		try {
-			System.out.println(new JobManager().performTask(new Job(rooms.get(0), "12:00","23:59","31/05/2010"), users));
+			System.out.println(new JobManager(null).performTask(new Job(rooms.get(0), "12:00","23:59","31/05/2010"), users));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

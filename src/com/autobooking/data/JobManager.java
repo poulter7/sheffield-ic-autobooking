@@ -13,6 +13,8 @@ import java.util.TimerTask;
 
 import org.apache.http.client.ClientProtocolException;
 
+import com.autobooking.ui.UI;
+
 /**
  * JobManager
  * 
@@ -24,14 +26,24 @@ import org.apache.http.client.ClientProtocolException;
 public class JobManager {
 	protected static final String loginPageURL = "https://mypc.shef.ac.uk/MyPC3/Front.aspx";
 	
-	public static int SUCCESSFUL_SCHEDULE = 1;
-	public static int START_TIME_ALREADY_GONE = 2;
-	public static int START_TIME_AFTER_END_TIME = 3;
-	public static int NEED_MIN_OF_TWO_USERS = 4;
+	public final static int SUCCESSFUL_SCHEDULE = 1;
+	public final static int START_TIME_ALREADY_GONE = 2;
+	public final static int START_TIME_AFTER_END_TIME = 3;
+	public final static int NEED_MIN_OF_TWO_USERS = 4;
+	public final static int NEED_MIN_OF_ONE_USER = 5;
+	public static final int BOOKING_MADE = 0;
+	
 	private final Calendar startDate =  Calendar.getInstance();
 	private final Calendar endDate =  Calendar.getInstance();
+	private final UI ui;
 
 	private static final int ADVANCED_BOOKING_DAYS = 2;
+
+
+
+	public JobManager(UI console) {
+		this.ui = console;
+	}
 
 	/**
 	 * Asks the JobManager to book this room out and state how many users you have to play with
@@ -59,6 +71,8 @@ public class JobManager {
 		// Don't have the two users you need
 		if( hoursBetween > 4 && users.size() < 2 ) {
 			return NEED_MIN_OF_TWO_USERS;
+		} else if(users.isEmpty()){
+			return NEED_MIN_OF_ONE_USER;
 		}
 		// divide the job up into tasks for each user
 		assignUserTasks(job, users, hoursBetween);
@@ -66,10 +80,12 @@ public class JobManager {
 		// if you can do it all now, go for it!
 		if(canStartNow(job)){
 			performLoginAndBooking(users);
+			return BOOKING_MADE;
 		}else{
 			scheduleLoginAndBooking(users);
+			return SUCCESSFUL_SCHEDULE;
 		}
-		return SUCCESSFUL_SCHEDULE;
+		
 	}
 	
 	/**
@@ -81,7 +97,7 @@ public class JobManager {
 	 * @throws URISyntaxException
 	 */
 	private void performLoginAndBooking(List<User> users) throws ClientProtocolException, IOException, URISyntaxException {
-		System.out.println("Can book right now!");
+		ui.printToUiConsole("Can book right now!"); 
 		for(User u: users){
 			u.personalSession.login(u.name, u.password);
 		}
@@ -98,7 +114,7 @@ public class JobManager {
 	 * @param users
 	 */
 	private void scheduleLoginAndBooking(final List<User> users) {
-		System.out.println("Scheduling logon procedure to five minutes before booking");
+		ui.printToUiConsole("Scheduling logon procedure to five minutes before booking");
 		final Timer t = new Timer();
 		
 		// define the booking task
@@ -124,7 +140,7 @@ public class JobManager {
 			
 			@Override
 			public void run() {
-				System.out.println("Executing logon");
+				ui.printToUiConsole("Executing logon");
 				for(User u: users){
 					try {
 						u.personalSession.login(u.name, u.password);
@@ -152,7 +168,7 @@ public class JobManager {
 		int loginPrior = 2;
 		canLogInNow.add(Calendar.MINUTE, -loginPrior);
 		// schedule everyone to be logged in
-		System.out.println("Will log everyone in at: " + canLogInNow.getTime().toString());
+		ui.printToUiConsole("Will log everyone in at: " + canLogInNow.getTime().toString());
 		t.schedule(login, canLogInNow.getTime());
 		
 	}
@@ -165,7 +181,7 @@ public class JobManager {
 	 */
 	private boolean canStartNow(Job job) {
 		Calendar canBookOnCal = Calendar.getInstance();
-		canBookOnCal.add(Calendar.DAY_OF_WEEK, ADVANCED_BOOKING_DAYS+1);
+		canBookOnCal.add(Calendar.DAY_OF_WEEK, ADVANCED_BOOKING_DAYS);
 		return startDate.before(canBookOnCal);
 	}
 	
@@ -282,4 +298,5 @@ public class JobManager {
 		}
 		return secondsServerIsAhead;
 	}
+	
 }
