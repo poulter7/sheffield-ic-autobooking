@@ -49,8 +49,6 @@ public class JobManager {
 
 	private static final int ADVANCED_BOOKING_DAYS = 2;
 
-
-
 	public JobManager(UI console) {
 		this.ui = console;
 	}

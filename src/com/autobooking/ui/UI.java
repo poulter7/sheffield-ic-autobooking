@@ -26,6 +26,7 @@ import java.awt.event.FocusListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -58,6 +59,7 @@ public class UI extends JFrame {
 	private JXDatePicker dateField;
 	private JComboBox startTime;
 	private JComboBox endTime;
+	private HashMap<String, Integer> roomMap;
 
 	public static void main(String[] args) {
 		new UI();
@@ -73,7 +75,6 @@ public class UI extends JFrame {
 		this.getContentPane().add(returnUIPanel());
 		this.pack();
 		this.setVisible(true);
-		// System.out.println(this.getSize());
 	}
 
 	/**
@@ -106,8 +107,13 @@ public class UI extends JFrame {
 		// setup contents of dropdown boxes
 		String[] timeList = timeList();
 		
-		// TODO autoget all of the rooms
-		String[] roomNames = { "231", "330", "331" };
+		// TODO add button which gets room listings
+		// will need logon
+		
+		// retrive room listings
+		roomMap = getHashOfRooms();
+		// put the values in the array 
+		String[] roomNames = roomMap.keySet().toArray(new String[0]);
 		
 		// setup UI elements
 		roomList = new JComboBox(roomNames);
@@ -175,6 +181,13 @@ public class UI extends JFrame {
 		return panel;
 	}
 
+	private HashMap<String, Integer> getHashOfRooms() {
+		// TODO parse room listings
+		HashMap<String, Integer> h = new HashMap<String, Integer>();
+		h.put("CILass 1", new Integer(330));
+		return h;
+	}
+
 	public void printToUiConsole(String s) {
 		System.out.println(s);
 		console.append(s + "\n");
@@ -189,7 +202,7 @@ public class UI extends JFrame {
 				List<User> users = new ArrayList<User>();
 				
 				// make the room
-				Room room = new Room(Integer.parseInt(roomList.getSelectedItem().toString()),"");				
+				Room room = new Room(roomMap.get((roomList.getSelectedItem().toString())),"");				
 	
 				// adding users
 				String username1String = username1.getText();
@@ -197,7 +210,7 @@ public class UI extends JFrame {
 				String password1String = String.copyValueOf(password1.getPassword());
 				String password2String = String.copyValueOf(password2.getPassword());
 				
-				// TODO can logon and test that their password is correct
+				// TODO can logon and test that their password is correct removing this check
 				if(!username1String.isEmpty() && !password1String.isEmpty()){
 					printToUiConsole("User " +username1String + " accepted");
 					users.add(new User(username1.getText(), String.copyValueOf(password1.getPassword())));	
