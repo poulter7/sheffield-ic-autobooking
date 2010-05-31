@@ -44,11 +44,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 
-import com.sun.xml.internal.ws.developer.UsesJAXBContext;
 
 
-
-//TODO add feedback to the user during booking and logging in
 public class Session {
 	private static final String PAGE = "/MyPC3/Front.aspx";
 	private static final String URL = "mypc.shef.ac.uk";
@@ -150,24 +147,32 @@ public class Session {
 	 * Returns a Calendar object which represents the server time
 	 * Should be accurate and unchanging as lag is introduced through javascript
 	 * 
-	 * @return
+	 * @return current time
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 * @throws ParseException
 	 */
 	public static Calendar queryTime() throws ClientProtocolException, IOException, ParseException {
-		// TODO tidy this
+		// Setup a client
 		HttpClient client = new DefaultHttpClient();
-		HttpGet request = new HttpGet("https://mypc.shef.ac.uk/MyPC3/Front.aspx?page=login");
+		HttpGet request = new HttpGet(Session.LOGIN_URL);
+//		HttpGet request = new HttpGet("https://mypc.shef.ac.uk/MyPC3/Front.aspx?page=login");
+
+		// Get the HTML of the login page
 		HttpResponse response = client.execute(request);
 		ByteArrayOutputStream b = new ByteArrayOutputStream();
 		response.getEntity().writeTo(b);
+		
+		// parse the page
 		String serverTimeString = b.toString().split("var nd = new Date")[1]; 
 		String[] elements= serverTimeString.substring(serverTimeString.indexOf('(')+1, serverTimeString.indexOf(')')).split(",");
+		
+		// convert the date string from the page into a calendar object
 		DateFormat d = new SimpleDateFormat();
 		Date serverTime = d.parse(elements[2]+"/"+elements[1]+"/"+elements[0]+" "+elements[3]+":"+elements[4]);
 		Calendar returnDate = Calendar.getInstance();
 		returnDate.setTime(serverTime);
+		// TODO SimpleDateFormat doesn't parse seconds, is there a better way?
 		returnDate.set(Calendar.SECOND, Integer.parseInt(elements[5]));
 		return returnDate;
 	}
@@ -179,7 +184,6 @@ public class Session {
 		//TODO release any resources still attached to the session
 		((CookieStore)localContext.getAttribute(ClientContext.COOKIE_STORE)).clear();
 	}
-	
 	
 	/**
 	 * Shows all the session cookies stored so far

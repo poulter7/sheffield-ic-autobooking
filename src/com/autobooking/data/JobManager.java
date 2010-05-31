@@ -6,10 +6,6 @@
  * Date: 			31 May 2010
  * Last edited: 	
  * Written by:		Jonathan Poulter
- * 
- * Manages the job of splitting up bookings
- * and scheduling them to be performed at the
- * correct time
  */
 
 package com.autobooking.data;
@@ -33,9 +29,10 @@ import com.autobooking.ui.UI;
  * JobManager
  * 
  * From a single broadly defined job, will figure out what order best to do things in and setup
- * the necessary tasks to happen at the right time, or perform them immediately if possible
- * 
+ * the necessary tasks to happen at the right time, or perform them immediately if possible.
+ *
  * @author Jonathan Poulter
+ * @version 1.0
  */
 public class JobManager {
 	
@@ -134,13 +131,11 @@ public class JobManager {
 		final TimerTask book = new TimerTask() {
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
 				for(User u: users){
 					for(Job j: u.taskList){
 						try {
 							u.personalSession.doJob(j);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
@@ -158,7 +153,6 @@ public class JobManager {
 					try {
 						u.personalSession.login(u.name, u.password);
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -222,6 +216,7 @@ public class JobManager {
 		if(hoursBetween <= 4){
 			users.get(0).addTask(new Job(job.room, job.startTime, job.endTime, job.date));
 		}else{  
+			// TODO book in alternating hours if you miss one, all isn't lost
 			int blocks = (int) Math.ceil(hoursBetween/4.0);
 			System.out.println(blocks);
 			
@@ -252,7 +247,7 @@ public class JobManager {
 	 *
 	 * @param startDate
 	 * @param endDate
-	 * @return
+	 * @return number of hours
 	 */
 	public long hoursBetween(Calendar startDate, Calendar endDate) {  
 		// TODO could be int this can be at maximum 24
@@ -297,7 +292,7 @@ public class JobManager {
 	
 	/**
 	 * get the number of seconds by which the server is ahead of the client
-	 * @return
+	 * @return seconds client is behind
 	 */
 	public static int getServerTimeOffset() {
 		int secondsServerIsAhead = 0;

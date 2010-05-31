@@ -196,6 +196,8 @@ public class UI extends JFrame {
 				String username2String = username2.getText();
 				String password1String = String.copyValueOf(password1.getPassword());
 				String password2String = String.copyValueOf(password2.getPassword());
+				
+				// TODO can logon and test that their password is correct
 				if(!username1String.isEmpty() && !password1String.isEmpty()){
 					printToUiConsole("User " +username1String + " accepted");
 					users.add(new User(username1.getText(), String.copyValueOf(password1.getPassword())));	
