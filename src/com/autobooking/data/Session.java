@@ -1,3 +1,18 @@
+/*
+ * Session.java
+ * 
+ * Copyright (c) 2010 Jonathan Poulter and Ian Salmons
+ * 
+ * Date: 			31 May 2010
+ * Last edited: 	
+ * Written by:		Jonathan Poulter
+ * 
+ * Simulates one logged on session for a given user on the system
+ * Can perform all of the tasks that user would want to do within it,
+ * logon, book, logout.
+ * Could be easily extended to do more, find booking, edit bookings, delete bookings
+ */
+
 package com.autobooking.data;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -29,17 +44,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 
-/**
- * Session
- * 
- * Simulates one logged on session for a given user on the system
- * Can perform all of the tasks that user would want to do within it,
- * logon, book, logout.
- * Could be easily extended to do more, find booking, edit bookings, delete bookings
- * 
- * @author Jonathan Poulter
- *
- */
+
 
 //TODO add feedback to the user during booking and logging in
 public class Session {

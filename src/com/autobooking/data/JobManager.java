@@ -1,3 +1,17 @@
+/*
+ * JobManager.java
+ * 
+ * Copyright (c) 2010 Jonathan Poulter and Ian Salmons
+ * 
+ * Date: 			31 May 2010
+ * Last edited: 	
+ * Written by:		Jonathan Poulter
+ * 
+ * Manages the job of splitting up bookings
+ * and scheduling them to be performed at the
+ * correct time
+ */
+
 package com.autobooking.data;
 
 import java.io.IOException;

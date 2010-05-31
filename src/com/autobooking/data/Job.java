@@ -1,3 +1,15 @@
+/*
+ * Job.java
+ * 
+ * Copyright (c) 2010 Jonathan Poulter and Ian Salmons
+ * 
+ * Date: 			31 May 2010
+ * Last edited: 	
+ * Written by:		Jonathan Poulter
+ * 
+ * Encapsulates a single booking task
+ */
+
 package com.autobooking.data;
 
 public class Job {

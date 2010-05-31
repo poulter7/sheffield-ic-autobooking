@@ -1,3 +1,15 @@
+/*
+ * Room.java
+ * 
+ * Copyright (c) 2010 Jonathan Poulter and Ian Salmons
+ * 
+ * Date: 			31 May 2010
+ * Last edited: 	
+ * Written by:		Ian Salmons
+ * 
+ * Encapsulates a room
+ */
+
 package com.autobooking.data;
 
 public class Room {

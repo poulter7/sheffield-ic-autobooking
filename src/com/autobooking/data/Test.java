@@ -1,3 +1,15 @@
+/*
+ * Test.java
+ * 
+ * Copyright (c) 2010 Jonathan Poulter and Ian Salmons
+ * 
+ * Date: 			31 May 2010
+ * Last edited: 	
+ * Written by:		Jonathan Poulter
+ * 
+ * test harness for the auto booking system
+ */
+
 package com.autobooking.data;
 import java.util.ArrayList;
 import java.util.List;

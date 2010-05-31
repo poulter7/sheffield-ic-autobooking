@@ -1,0 +1,6 @@
+Sheffield MyPC Autobooker is a program which will enable automatic booking of computers
+within the information commons, normally through the system available at
+https://mypc.shef.ac.uk/MyPC3/
+
+This is performed by automating the process, for periods over the normal 4 hours lockout
+and it will do automatic logon at midnight to book just opened booking slots immediately.
