@@ -38,7 +38,6 @@ import com.autobooking.ui.UI;
  * @author Jonathan Poulter
  */
 public class JobManager {
-	protected static final String loginPageURL = "https://mypc.shef.ac.uk/MyPC3/Front.aspx";
 	
 	public final static int SUCCESSFUL_SCHEDULE = 1;
 	public final static int START_TIME_ALREADY_GONE = 2;

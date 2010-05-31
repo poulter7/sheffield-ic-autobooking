@@ -44,11 +44,16 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 
+import com.sun.xml.internal.ws.developer.UsesJAXBContext;
+
 
 
 //TODO add feedback to the user during booking and logging in
 public class Session {
-	
+	private static final String PAGE = "/MyPC3/Front.aspx";
+	private static final String URL = "mypc.shef.ac.uk";
+	private static final String PROTOCOL = "https";
+	private static final String LOGIN_URL = "https://mypc.shef.ac.uk/MyPC3/Front.aspx";
 	private HttpContext localContext;
 	private CookieStore cookieStore;
 	private HttpClient client;
@@ -72,23 +77,43 @@ public class Session {
 	 * @throws IOException
 	 */
 	protected void login(String username, String password) throws ClientProtocolException, IOException{
+		// Setup NVPs for login
 		params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("userName", username));
 		params.add(new BasicNameValuePair("password", password));
 		params.add(new BasicNameValuePair("loginButton", "Login"));
 		params.add(new BasicNameValuePair("page", "validateLogin"));
+		
+		// Put the parameters into a form
 		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params, "UTF-8");
-		// setup the post
-		HttpPost httppost = new HttpPost(JobManager.loginPageURL);
+		
+		// Setup the post
+		HttpPost httppost = new HttpPost(Session.LOGIN_URL);
 		httppost.setEntity(entity);
-		// execute the post
+		
+		// Execute the post
 		HttpResponse response = client.execute(httppost, localContext);
 		response.getEntity().consumeContent();
+		
+		// Check what was returned
 		if(printCookies() == 2){
 			System.out.println("\tSuccessful logon");
 		}else{
 			System.out.println("\tLogon failed");
 		}
+	}
+	
+	/**
+	 * Make a booking of the passed job.
+	 * 
+	 * 	This method uses {@link #book(String, String, String, int)} to perform the booking
+	 * @param j
+	 * @throws ClientProtocolException
+	 * @throws URISyntaxException
+	 * @throws IOException
+	 */
+	protected void doJob(Job j) throws ClientProtocolException, URISyntaxException, IOException{
+		book(j.startTime,j.endTime,j.date,j.room.getRoomID());
 	}
 	
 	/**
@@ -102,11 +127,6 @@ public class Session {
 	 * @throws URISyntaxException 
 	 * @throws ClientProtocolException 
 	 */
-	
-	protected void doJob(Job j) throws ClientProtocolException, URISyntaxException, IOException{
-		book(j.startTime,j.endTime,j.date,j.room.getRoomID());
-	}
-	
 	private void book(String startTime, String finishTime, String date, int resource) throws URISyntaxException, ClientProtocolException, IOException{
 		params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("startTime", startTime));
@@ -117,8 +137,7 @@ public class Session {
 		params.add(new BasicNameValuePair("command", "create"));
 		params.add(new BasicNameValuePair("submitButton", "Save"));
 		params.add(new BasicNameValuePair("submitted", "1"));
-		// TODO use URLEncodedUtils.format concatenated to loginPageURL to produce get
-		URI uri = URIUtils.createURI("https", "mypc.shef.ac.uk", -1, "/MyPC3/Front.aspx",
+		URI uri = URIUtils.createURI(Session.PROTOCOL, Session.URL, -1, Session.PAGE,
 				URLEncodedUtils.format(params, "UTF-8"), null);
 		// TODO add some confirmation for the user
 		System.out.println(uri.toString());
