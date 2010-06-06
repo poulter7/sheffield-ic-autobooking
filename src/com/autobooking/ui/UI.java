@@ -145,7 +145,6 @@ public class UI extends JFrame {
 		// add listeners to the text fields
 		FocusListener clearField = new FocusListener() {
 
-			@Override
 			public void focusLost(FocusEvent e) {
 				JTextField f = (JTextField) e.getComponent();
 				if (f.getText().equals("")) {
@@ -153,7 +152,6 @@ public class UI extends JFrame {
 				}
 			}
 
-			@Override
 			public void focusGained(FocusEvent e) {
 				JTextField f = (JTextField) e.getComponent();
 				if (f.getText().equals("username")) {
@@ -166,7 +164,6 @@ public class UI extends JFrame {
 		username2.addFocusListener(clearField);
 
 		bookButton.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				UI.this.console.setText("");
 				UI.this.bookButton.setEnabled(false);
@@ -196,7 +193,6 @@ public class UI extends JFrame {
 	public Runnable getExecuteRunnable(){
 		return new Runnable() {
 		
-			@Override
 			public void run() {
 				// init lists for further development
 				List<User> users = new ArrayList<User>();
@@ -268,7 +264,6 @@ public class UI extends JFrame {
 				
 				Runnable r = new Runnable() {
 					
-					@Override
 					public void run() {
 						bookButton.setText("Book Now!");
 						bookButton.setEnabled(true);
