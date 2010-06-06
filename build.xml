@@ -57,7 +57,7 @@
         <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
         <antcall target="build"/>
     </target>
-    <target name="UI (1)">
+    <target name="run">
         <java classname="com.autobooking.ui.UI" failonerror="true" fork="yes">
             <classpath refid="auto_booker.classpath"/>
         </java>
