@@ -4,3 +4,14 @@ https://mypc.shef.ac.uk/MyPC3/
 
 This is performed by automating the process, for periods over the normal 4 hours lockout
 and it will do automatic logon at midnight to book just opened booking slots immediately.
+
+Booking requests are simple gets of this form:
+Make booking 5:00 - 6:00
+https://mypc.shef.ac.uk/MyPC3/Front.aspx?page=booking&startTime=05%3A00&endTime=06%3A00&resourceId=286&date=09%2F06%2F2010&command=create
+
+Delete a booking:
+Booking ID increases past number given here as a counter.
+https://mypc.shef.ac.uk/MyPC3/Front.aspx?page=booking&startTime=05%3A00&endTime=06%3A00&resourceId=286&date=09%2F06%2F2010&command=delete&bookingId=731462
+
+This would allow us to eventually replicate all functionality of the booking system if so desired.
+Cannot delete bookings of other users. Such that I have found.
