@@ -2,8 +2,10 @@ Sheffield MyPC Autobooker is a program which will enable automatic booking of co
 within the information commons, normally through the system available at
 https://mypc.shef.ac.uk/MyPC3/
 
-This is performed by automating the process, for periods over the normal 4 hours lockout
-and it will do automatic logon at midnight to book just opened booking slots immediately.
+The system is insecure and this application is able to demonstrate so by automating booking, performing block bookings for limited resources for easily a whole day.
+This is performed by automating the process, for periods over the normal 4 hours lockout and it will do automatic logon at midnight to book just opened booking slots immediately.
+This could easily be rewritten as a webservice and there would be possibilities of effectively selling Information Commons resources.
+I clearly don't encourage use of this kind.
 
 Booking requests are simple gets of this form:
 Make booking 5:00 - 6:00
